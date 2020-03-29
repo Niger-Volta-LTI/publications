@@ -1,0 +1,129 @@
+\begin{thebibliography}{18}
+\providecommand{\natexlab}[1]{#1}
+\providecommand{\url}[1]{\texttt{#1}}
+\expandafter\ifx\csname urlstyle\endcsname\relax
+  \providecommand{\doi}[1]{doi: #1}\else
+  \providecommand{\doi}{doi: \begingroup \urlstyle{rm}\Url}\fi
+
+\bibitem[Adeniyi(2010)]{adeniyi2010tone}
+Harrison Adeniyi.
+\newblock Tone and {Nominalization} in {Edo}.
+\newblock \emph{California Linguistic Notes}, 35\penalty0 (1):\penalty0 1--22,
+  2010.
+
+\bibitem[Agi{\'c} \& Vuli{\'c}(2019)Agi{\'c} and
+  Vuli{\'c}]{agic-vulic-2019-jw300}
+{\v{Z}}eljko Agi{\'c} and Ivan Vuli{\'c}.
+\newblock {JW}300: {A} {Wide-Coverage} {Parallel} {Corpus} for {Low-Resource}
+  {Languages}.
+\newblock In \emph{Proceedings of the 57th Annual Meeting of the Association
+  for Computational Linguistics}, pp.\  3204--3210, Florence, Italy, July 2019.
+  Association for Computational Linguistics.
+\newblock \doi{10.18653/v1/P19-1310}.
+\newblock URL \url{https://www.aclweb.org/anthology/P19-1310}.
+
+\bibitem[Awobuluyi(2016)]{awobuluyi201626}
+\d{O}l{\'a}d{\'e}l{\'e} Awobuluyi.
+\newblock Why {We} {Should} {Develop} {Nigerian} {Languages}.
+\newblock \emph{Issues in Contemporary African Linguistics: A Festschrift for
+  Oladele Awobuluyi}, 11:\penalty0 347, 2016.
+
+\bibitem[Donwa-Ifode(1986)]{isoko_phonetics}
+Shirley Donwa-Ifode.
+\newblock Phonetic {Variation} in {Consonants} ({Isoko}).
+\newblock \emph{Anthropological Linguistics}, 28\penalty0 (2):\penalty0
+  149--160, 1986.
+\newblock ISSN 00035483, 19446527.
+\newblock URL \url{http://www.jstor.org/stable/30028405}.
+
+\bibitem[{Eberhard} et~al.(2019){Eberhard}, {Simons}, and
+  (eds.)]{ethnologue_2019}
+David~M. {Eberhard}, Gary~F. {Simons}, and Charles D.~{Fennig} (eds.).
+\newblock Ethnologue: {Languages} of the {World}, 2019.
+\newblock URL \url{http://www.ethnologue.com}.
+
+\bibitem[Elugbe(1989)]{Elugbe_1989}
+Ben~Ohi\d{o}mamh\d{e} Elugbe.
+\newblock \emph{Comparative {Edoid}: phonology and lexicon}.
+\newblock University of Port Harcourt Press, 1989.
+
+\bibitem[Ganagana \& Ogboru(2019)Ganagana and Ogboru]{ganagana2019contrastive}
+D.~E.~Peter Ganagana and Lawrence~Efe Ogboru.
+\newblock Contrastive {Study} {Of} {The} {Morphological} {Differences}
+  {Between} {English}, {Izon} {And} {Isoko} {Languages}.
+\newblock 2019.
+
+\bibitem[Ikoyo-Eweto(2018)]{ikoyo2018phonetic}
+Evarista~Ofure Ikoyo-Eweto.
+\newblock Phonetic {Differences} between {Esan} and {Selected} {Edoid}
+  {Languages}.
+\newblock \emph{Journal Of Linguistics, Language and Culture}, 4\penalty0 (1),
+  2018.
+
+\bibitem[Ilolo(2013)]{ilolo2013vowel}
+AKPOGHENE~ONORIEVARIE Ilolo.
+\newblock \emph{Vowel {Reduction} in {Educated} {Isoko} {English}}.
+\newblock PhD thesis, 2013.
+
+\bibitem[Jia et~al.(2019)Jia, Weiss, Biadsy, Macherey, Johnson, Chen, and
+  Wu]{jia2019direct}
+Ye~Jia, Ron~J Weiss, Fadi Biadsy, Wolfgang Macherey, Melvin Johnson, Zhifeng
+  Chen, and Yonghui Wu.
+\newblock Direct speech-to-speech translation with a sequence-to-sequence
+  model.
+\newblock \emph{arXiv preprint arXiv:1904.06037}, 2019.
+
+\bibitem[{Kreutzer} et~al.(2019){Kreutzer}, {Bastings}, and {Riezler}]{JoeyNMT}
+Julia {Kreutzer}, Joost {Bastings}, and Stefan {Riezler}.
+\newblock Joey {NMT}: {A} {Minimalist} {NMT} {Toolkit} for {Novices}.
+\newblock \emph{To Appear in EMNLP-IJCNLP 2019: System Demonstrations}, Nov
+  2019.
+
+\bibitem[Martinus \& Abbott(2019)Martinus and Abbott]{focus_southafrica}
+Laura Martinus and Jade~Z. Abbott.
+\newblock A {Focus} on {Neural} {Machine} {Translation} for {African}
+  {Languages}.
+\newblock \emph{CoRR}, abs/1906.05685, 2019.
+\newblock URL \url{http://arxiv.org/abs/1906.05685}.
+
+\bibitem[Odoje(2013)]{odojelanguage}
+Clement Odoje.
+\newblock Language {Inequality}: {Machine} {Translation} as the {Bridging}
+  {Bridge} for {African} languages.
+\newblock 4, 01 2013.
+
+\bibitem[Odoje(2016)]{odoje201612}
+Clement Odoje.
+\newblock The {Peculiar} {Challenges} of {SMT} to {African} {Languages}.
+\newblock \emph{ICT, Globalisation and the Study of Languages and Linguistics
+  in Africa}, pp.\  223, 2016.
+
+\bibitem[Ogie(2009)]{ogie2009multi}
+Ota Ogie.
+\newblock \emph{Multi-verb constructions in Edo}.
+\newblock Norges teknisk-naturvitenskapelige universitet, Det humanistiske
+  fakultet~…, 2009.
+
+\bibitem[Omo-Ojugo(2004)]{omo2004esan}
+MO~Omo-Ojugo.
+\newblock Esan language endangered.
+\newblock \emph{Implications for the Teaching and Learning of Indigenous
+  Languages in Nigeria}, 2004.
+
+\bibitem[Rolle(2013)]{rolle2013phonetics}
+Nicholas Rolle.
+\newblock Phonetics and {Phonology} of {Urhobo}.
+\newblock \emph{UC Berkeley PhonLab Annual Report}, 9\penalty0 (9), 2013.
+
+\bibitem[Vaswani et~al.(2017)Vaswani, Shazeer, Parmar, Uszkoreit, Jones, Gomez,
+  Kaiser, and Polosukhin]{NIPS2017_7181}
+Ashish Vaswani, Noam Shazeer, Niki Parmar, Jakob Uszkoreit, Llion Jones,
+  Aidan~N Gomez, {\L}ukasz Kaiser, and Illia Polosukhin.
+\newblock Attention is {All} you {Need}.
+\newblock In I.~Guyon, U.~V. Luxburg, S.~Bengio, H.~Wallach, R.~Fergus,
+  S.~Vishwanathan, and R.~Garnett (eds.), \emph{Advances in Neural Information
+  Processing Systems 30}, pp.\  5998--6008. Curran Associates, Inc., 2017.
+\newblock URL
+  \url{http://papers.nips.cc/paper/7181-attention-is-all-you-need.pdf}.
+
+\end{thebibliography}
