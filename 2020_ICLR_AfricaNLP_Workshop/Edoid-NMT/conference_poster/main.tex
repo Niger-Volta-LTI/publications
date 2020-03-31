@@ -86,7 +86,7 @@
 \addtobeamertemplate{headline}{} 
 {
 \begin{tikzpicture}[remember picture,overlay] 
-\node [shift={(-22 cm,-10cm)}] at (current page.north east) {\includegraphics[height=3cm]{logos/AI-logo}}; 
+\node [shift={(-18 cm,-10.25cm)}] at (current page.north east) {\includegraphics[height=6cm]{logos/nvlti}}; 
 \end{tikzpicture} 
 }
 \addtobeamertemplate{headline}{} 
@@ -159,13 +159,14 @@
 %----------------------------------------------------------------------------------------
 
 \begin{block}{Overview}
-
-Many of the 500 plus languages spoken in Nigeria today have relinquished their previous prestige and purpose in modern society to English and Nigerian Pidgin, notably amongst the younger generations.
+\begin{description}
+  \item[$\bullet$] Many minority Nigerian languages have resigned their previous prestige and purpose 
+  \item[$\bullet$] $\exists$ \textasciitilde{30} Edoid languages with \textasciitilde{5M} speakers
+  \item[$\bullet$] Edoid language technology (LT) is non-existent
+\end{description}
 
 \vspace{10mm}
 
-% How language inequality affects people and indigenous language research
-For tens of millions of speakers, language inequalities manifest themselves as unequal access to information, communications, health care, security along with attenuated participation in political and civic life \cite{odojelanguage, awobuluyi201626}.
 
 \end{block}
 
@@ -182,8 +183,12 @@ For tens of millions of speakers, language inequalities manifest themselves as u
 
 \vspace{5mm}
 
-Machine Translation (MT) can facilitate good governance, national development and offers a path for technological, economic, social and political participation and empowerment to those with unequal access. 
-
+Readily accessible translation apps can $\rightarrow$
+\begin{description}
+  \item[$\bullet$] Advance language literacy, documentation \& preservation
+  \item[$\bullet$] Facilitate good governance, national development 
+  \item[$\bullet$] Expedite economic \& social \& technological empowerment
+\end{description}
 \end{block}
 
 \vspace{5mm}
@@ -197,9 +202,8 @@ Machine Translation (MT) can facilitate good governance, national development an
 
 \begin{block}{This Work}
 
-Using the new JW300 public dataset, we trained and evaluated baseline Neural Machine Translation (NMT) models for four widely spoken Edoid languages listed below with their classification from \cite{elugbe1989comparative}. \\
-
-\vspace{5mm}
+We trained and evaluated baseline Neural Machine Translation (NMT) models for four widely spoken Edoid languages listed below with their classification
+\vspace{10mm}
 
 % Population figures: https://en.wikipedia.org/wiki/Edoid_languages
 % 
@@ -225,10 +229,10 @@ Using the new JW300 public dataset, we trained and evaluated baseline Neural Mac
 \begin{tabular}{cccc}
   \textbf{Language} &  & \textbf{Branch} & \textbf{\# Speakers} \\
   \specialrule{3pt}{2pt}{10pt}
-  \d{\`E}d{\'o}  &  & North-Central & \textasciitilde{1.6 - 2.3M} \\
+  \d{\`E}d{\'o}  &  & North-Central & \textasciitilde{1.6$\rightarrow$2.3M} \\
   {\'E}s{\'a}n & & North-Central & \textasciitilde{630k} \\
     \midrule
-  Urhobo  & & Southwestern &  \textasciitilde{1 - 1.5M} \\
+  Urhobo  & & Southwestern &  \textasciitilde{1$\rightarrow$1.5M} \\
   Isoko   & & Southwestern & \textasciitilde{660k} \\
   \specialrule{3pt}{2pt}{2pt}
   \end{tabular}
@@ -239,11 +243,15 @@ Using the new JW300 public dataset, we trained and evaluated baseline Neural Mac
 \vspace{15mm}
 
 \textbf{Dataset:}
-JW300 dataset is a large-scale, parallel corpus comprising more than 300 languages of which 101 are African. JW300 text is drawn from the Watchtower and Awake! religious magazines by Jehovah's Witnesses (JW). The test set contains sentences with the highest coverage across all other languages in the corpus. \\
+JW300 dataset is a large-scale, parallel corpus comprising more than 300 languages of which 101 are African. JW300 text is drawn from the Watchtower and Awake! religious magazines by Jehovah's Witnesses (JW).\\
 
 \vspace{10mm}
 
-\textbf{Models:} The open-source, Python 3 machine translation toolkit \texttt{JoeyNMT} was used to train Transformer models \cite{NIPS2017_7181}. Our training hardware was the free-tier configuration on Google Colaboratory, a single core Xeon CPU instance and a Tesla K80 GPU.
+\textbf{Models:} 
+\begin{description}
+  \item[$\bullet$] Transformer models trained with the open-source, Python 3 machine translation toolkit \textbf{\texttt{JoeyNMT}}
+    \item[$\bullet$] Training hardware was the free-tier configuration on Google Colaboratory, a single core Xeon CPU instance and a Tesla K80 GPU.
+\end{description}
 
 \end{block}
 
@@ -255,7 +263,7 @@ JW300 dataset is a large-scale, parallel corpus comprising more than 300 languag
   \item[$\bullet$] Word-level tokenization.
 \end{description}
 
-For BPE, 4000 BPE tokens were used based on ablation study by Martinus et al. for South African languages \cite{focus_southafrica}.
+For BPE, \textbf{4000 BPE tokens} were used based on ablation study by Martinus et al. for South African languages
 
 \end{block}
 
@@ -272,28 +280,8 @@ For BPE, 4000 BPE tokens were used based on ablation study by Martinus et al. fo
 \begin{center}
 Per-language BLEU scores by BPE or word-level tokenization
 % \includegraphics[trim=left bottom right top, clip]{file}
-  \includegraphics[trim = 0mm 60mm 0mm 55mm, clip, width=0.8\textwidth]{figures/edoid_nmt_results.pdf}
+  \includegraphics[trim = 0mm 60mm 0mm 50mm, clip, width=0.8\textwidth]{figures/edoid_nmt_results.pdf}
 \end{center}
-
-%\begin{table}[h]
-%\label{results}
-%\begin{center}
-%\begin{tabular}{c@{\qquad}ccc@{\qquad}ccc}
-%  \specialrule{3pt}{2pt}{13pt}
-%  \multirow{2}{*}{\raisebox{-\heavyrulewidth}{\textbf{Language}}} & \multicolumn{2}{c}{\textbf{BPE}} & \multicolumn{2}{c}{\textbf{Word}} & \multirow{2}{*}{\raisebox{-\heavyrulewidth}{\textbf{Tokens}}} & \multirow{2}{*}{\raisebox{-\heavyrulewidth}{\textbf{Sentences}}}
-%  	 \\
-%  \cmidrule{2-5}
-%  & dev & test & dev & test \\
-%  \midrule
-%  \d{\`E}d{\'o}  & 7.92 & 12.49 & 5.99 & 8.24 &  229,307 & 10,188 \\
-%  {\'E}s{\'a}n & 4.94 & 6.25 & 3.39 & 5.30 & 87,025 & 4,128 \\
-%    \midrule
-%  Urhobo  & 15.91 & 28.82 & 11.80 & 22.39 & 519,981 & 25,610 \\
-%  Isoko   & 32.58 & 38.05 & 32.38 & 38.91 & 4,824,998 & 214,546 \\
-%  \specialrule{3pt}{2pt}{2pt}
-%  \end{tabular}
-%\end{center}
-%\end{table}
 
 \end{block}
 
@@ -306,12 +294,12 @@ Per-language BLEU scores by BPE or word-level tokenization
 \begin{block}{Analysis}
 
 \begin{itemize}
-\item Urhobo and Isoko translation quality was generally \textbf{satisfactory} when reviewed by L1 speakers, correlating with higher BLEU scores.
-\item BPE tokenization provided \textbf{\textasciitilde{37\%} boost} for \d{\`E}d{\'o} and {\'E}s{\'a}n, a \textbf{32\% boost} for Urhobo but was flat to slightly \textbf{worse} than word-level tokenization for Isoko.
-\item The performance of the Isoko models, with BLEU scores in the range \{32, 39\}, gives an estimate of how much \textbf{additional clean text} is required to achieve a similar performance with \d{\`E}d{\'o} and {\'E}s{\'a}n.
+\item Urhobo and Isoko translation quality was \textbf{adequate} when reviewed by L1 speakers, correlating with higher BLEU scores.
+\item BPE tokenization $\rightarrow$ \textbf{+37\%} for \d{\`E}d{\'o} and {\'E}s{\'a}n
+\item BPE tokenization $\rightarrow$ \textbf{+32\%} for Urhobo but none for Isoko.
+\item An \textbf{Isoko-sized} training set may required to achieve a satisfactory performance for \d{\`E}d{\'o} and {\'E}s{\'a}n.
 \item A full ablation study with different (subword) tokenization approaches is needed to discover a more optimal representation.
 \item A \textbf{human evaluation study} and extensive error analysis will be crucial to better understand the linguistic features where NMT models under-perform.
-\item Future work include investigations using unsupervised machine translation and back-translation.
 \end{itemize}
 
 \end{block}
