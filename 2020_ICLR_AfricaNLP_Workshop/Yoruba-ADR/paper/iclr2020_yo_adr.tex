@@ -1,0 +1,278 @@
+
+\documentclass{article} % For LaTeX2e
+\usepackage{iclr2020_conference,times}
+
+
+% Optional math commands from https://github.com/goodfeli/dlbook_notation.
+\input{math_commands.tex}
+
+\usepackage{hyperref}
+\usepackage{url}
+\usepackage{graphicx}
+\usepackage{booktabs}
+%\newcommand{\David}[1]{\textcolor{red}{#1}}
+\definecolor{ao}{rgb}{0.0, 0.5, 0.0}
+
+\title{Improving Yor{\`u}b{\'a} Diacritic Restoration}
+
+
+% This will be everyone who has (a) provided or cleaned text (b) contributed code
+%% TODO Everyone put their Affiliation, Take away Niger-Volta LTI, if you want, it was just there as a placeholder, given I don't know everyone's desired affiliation
+
+\author{Iroro Fred \d{\`O}n\d{\`o}m\d{\`e} Orife \\
+Niger-Volta LTI\\
+%\texttt{iroro@alumni.cmu.edu}
+\And
+David I. Ad{\'e}lan{\'i} \\
+Saarland University, Niger-Volta LTI \\
+%\texttt{didelani@lsv.uni-saarland.de}
+\And
+Timi Fasubaa \\
+Niger-Volta LTI \\
+%\texttt{timifasubaa@berkeley.edu}
+\And
+Victor Williamson \\
+University of Wisconsin-Milwaukee \\
+%\texttt{vlw@uwm.edu}
+\And
+Wuraola Fisayo Oyewusi\\
+Data Science Nigeria \\
+%\texttt{oyewusiwuraola@gmail.com}
+\And
+\d{O}l{\'a}mil{\'e}kan Wahab \\
+Niger-Volta LTI \\
+%\texttt{olamyy53@gmail.com}
+\And
+K\d{\'{o}}l\'{a} T\'{u}b\d{\`{o}}s\'{u}n \\
+Yor{\`u}b{\'a} Name \\
+%\texttt{kolatubosun@gmail.com}
+\\
+\texttt{\footnotesize iroro@alumni.cmu.edu, didelani@lsv.uni-saarland.de} \vspace*{-.2em} \\
+\texttt{\footnotesize timifasubaa@berkeley.edu,  victorlamont05@gmail.com} \vspace*{-.2em} \\
+\texttt{\footnotesize oyewusiwuraola@gmail.com, olamyy53@gmail.com, kolatubosun@gmail.com}
+}
+
+% The \author macro works with any number of authors. There are two commands
+% used to separate the names and addresses of multiple authors: \And and \AND.
+%
+% Using \And between authors leaves it to \LaTeX{} to determine where to break
+% the lines. Using \AND forces a linebreak at that point. So, if \LaTeX{}
+% puts 3 of 4 authors names on the first line, and the last on the second
+% line, try using \AND instead of \And before the third author name.
+
+\newcommand{\fix}{\marginpar{FIX}}
+\newcommand{\new}{\marginpar{NEW}}
+
+\iclrfinalcopy % Uncomment for camera-ready version, but NOT for submission.
+\begin{document}
+
+
+\maketitle
+
+% \begin{abstract}
+% Yor{\`u}b{\'a} is a widely spoken West African language with a writing system rich in orthographic and tonal diacritics. They provide morphological information, are crucial for lexical disambiguation, pronunciation and are vital for any computational Speech or Natural Language Processing  tasks. However diacritic marks are commonly excluded from electronic texts due to limited device and application support as well as general education on proper usage. Building on our previous work, we report on recent efforts at dataset cultivation. By aggregating and improving disparate texts from the web and various personal libraries, we were able to significantly grow our clean Yor{\`u}b{\'a} dataset from a majority Bibilical text corpora from three sources to millions of tokens from over a dozen sources. We evaluate updated diacritic restoration models on a new, general purpose, public domain Yor{\`u}b{\'a} dataset of modern journalistic news text, selected to be a multi-purpose corpus reflecting contemporary usage. All pre-trained models, datasets and source-code have been released as an open-source project to advance efforts on Yor{\`u}b{\'a} language technology.\\
+% \end{abstract}
+
+\section{Introduction}\label{sec:introduction}
+
+Yor{\`u}b{\'a} is a tonal language spoken by more than 40 Million people in the countries of Nigeria, Benin and Togo in West Africa. The phonology is comprised of eighteen consonants, seven oral vowel and five nasal vowel phonemes with three kinds of tones realized on all vowels and syllabic nasal consonants \citep{akinlabi2004sound}. Yor{\`u}b{\'a} orthography makes notable use of tonal diacritics, known as \emph{am{\'i} oh{\`u}n}, to designate tonal patterns, and orthographic diacritics like underdots for various language sounds \citep{adegbola2012quantifying, wells2000orthographic}.
+
+Diacritics provide morphological information, are crucial for lexical disambiguation and pronunciation, and are vital for any computational Speech or Natural Language Processing (NLP) task. To build a robust ecosystem of \emph{Yor{\`u}b{\'a}-first} language technologies, Yor{\`u}b{\'a} text must be correctly represented in computing environments. The ultimate objective of automatic diacritic restoration (ADR) systems is to facilitate text entry and text correction that encourages the correct orthography and promotes quotidian usage of the language in electronic media.
+
+\subsection{Ambiguity in non-diacritized text}
+The main challenge in non-diacritized text is that it is very ambiguous \citep{orife2018adr, asahiah2017restoring, adegbola2012quantifying, de2007automatic}. ADR attempts to decode the ambiguity present in undiacritized text. Adegbola et al. assert that for ADR the ``prevailing error factor is the number of valid alternative arrangements of the diacritical marks that can be applied to the vowels and syllabic nasals within the words" \citep{adegbola2012quantifying}. 
+% Analogously to the analyses performed in \citep{orife2018adr}, we quantify the ambiguity in our current training set by the percentage of all words that have diacritics, 85\%; the percentage of unique non-diacritized word types that have two or more diacritized forms, 32\%, and the lexical diffusion or \emph{LexDif} metric, which conveys the average number of alternatives for each non-diacritized word, 1.47.
+% TODO IRORO, to provide the above figures. Not sure if we need to be soo wordy given the template is 2 pages + references + Appendix.
+
+\begin{table}[h]
+\caption{Diacritic characters with their non-diacritic forms}
+\label{ambiguity-table}
+\begin{center}
+  \begin{tabular}{lcl}
+    \multicolumn{2}{c}{\bf Characters} & \textbf{Examples}  \\
+	\toprule
+    {\`a} {\'a} \v{a} & \textbf{a} & gb{\`a} \emph{(spread)}, gba \emph{(accept)}, gb{\'a} \emph{(hit)}    \\  
+    {\`e} {\'e} \d{e} \d{\`e} \d{\'e} & \textbf{e} & {\`e}s{\`e} \emph{(dye)}, \d{e}s\d{\`e} \emph{(foot)}, es{\'e} \emph{(cat)}\\
+    {\`i} {\'i} & \textbf{i} & {\`i}l{\`u} \emph{(drum)}, ilu \emph{(opener)}, {\`i}l{\'u} \emph{(town)}\\  
+    {\`o} {\'o} \d{o} \d{\`o} \d{\'o} \v{o} & \textbf{o} & ar\d{o} \emph{(an invalid)}, ar{\'o} \emph{(indigo)}, {\`a}r{\`o} \emph{(hearth)}, {\`a}r\d{o} \emph{(funnel)}, {\`a}r\d{\`o} \emph{(catfish)}\\  
+    {\`u} {\'u} \v{u} & \textbf{u} & k{\`u}n \emph{(to paint)}, kun \emph{(to carve)}, k{\'u}n \emph{(be full)} \\ \\
+	\midrule
+    {\`n} {\'n} \={n} & \textbf{n} & {\`n} (a negator), {n} \emph{(I)}, {\'n} (continuous aspect marker) \\  
+    \d{s} & \textbf{s} &  \d{s}{\`a} \emph{(to choose)}, \d{s}{\'a} \emph{(fade)}, {s}{\`a} \emph{(to baptise)}, {s}{\'a} \emph{(to run)} \\
+  \bottomrule
+  \end{tabular}
+\end{center}
+\end{table}
+
+% Finally, 64\% of all unique, non-diacritized monosyllabic words possess multiple diacritized forms \citep{oluseye2003yoruba, delano1969dictionary}. Given that Yor{\`u}b{\'a} verbs are predominantly monosyllabic and that there are tonal changes rules governing how tonal diacritics on a specific word are \emph{altered} based on context, we acknowledge the complexity of the disambiguation task of diacritic restoration \citep{orife2018adr, delano1969dictionary}. 
+
+\subsection{Improving generalization performance}
+
+To make the first open-sourced ADR models available to a wider audience, we tested extensively on colloquial and conversational text. These soft-attention seq2seq models \citep{orife2018adr}, trained on the first three sources in Table \ref{tab:training_datasets}, suffered from domain-mismatch generalization errors and appeared particularly weak when presented with contractions, loan words or variants of common phrases. Because they were trained on majority Biblical text, we attributed these errors to low-diversity of sources and an insufficient number of training examples. To remedy this problem, we aggregated text from a variety of online public-domain sources as well as actual books. After scanning physical books from personal libraries, we successfully employed commercial Optical Character Recognition (OCR) software to concurrently use English, Romanian and Vietnamese characters, forming an \emph{approximative superset} of the Yor{\`u}b{\'a} character set. Text with inconsistent quality was put into a special queue for subsequent human supervision and manual correction. The post-OCR correction of H{\'a}{\`a} {\`E}n{\`i}y{\`a}n, a work of fiction of some 20,038 words, took a single expert two weeks of part-time work by to review and correct. Overall, the new data sources comprised varied text from conversational, various literary and religious sources as well as news magazines, a book of proverbs and a Human Rights declaration.
+
+\section{Methodology}\label{sec:methods}
+
+% \begin{itemize}
+% \item \textbf{JW300}: JW300 is a large-scale a parallel corpus for Machine Translation (MT),  by Jehovah's Witnesses (JW), comprising more than three hundred languages with on average one hundred thousand parallel sentences per language pair. The Yor{\`u}b{\'a}-English token pairs number some thirteen million. JW300 text is drawn from a number of online blogs, news and contemporary religious magazines \citep{agic-vulic-2019-jw300}.
+
+% \item \textbf{B{\'i}b{\'e}l{\`i}}: Two different versions of the Yor{\`u}b{\'a} Bible were web-scraped cleaned. The first is from Biblica, which is a translation of the New International Version (NIV). The second version is a 2010 translation published by the Bible Society of Nigeria (BSN). Our previous work only used the Biblica version. A computational analysis of the word distributions of each Bible's text revealed that on average 60\% of all verses were not identical. Therefore, it valuable to have both versions of the Bible to give a diversity of expression for the same concepts. Further more, the additional size was is still dwarfed by the JW300 corpus. 
+
+% \item \textbf{Language identification corpus}: This medium sized corpus of one hundred and fifty thousand tokens was used in a Nigerian language identification task involving the three major Nigerian tongues, Hausa, Igbo and Yor{\`u}b{\'a}. We obtained the public-domain text from GitHub \citep{Asubiaro_langid}.
+
+% \item \textbf{Yor{\`u}b{\'a}-Twi word-embedding corpora}
+% This medium sized corpus comprises a number of texts used in a recent word embedding task 
+
+% \item \textbf{{\`O}we} is a small collection of Yor{\`u}b{\'a} proverbs scraped from the electronic version of \emph{The Good Person: Excerpts from the Yor{\`u}b{\'a} Proverb Treasury}, a collection compiled and translated by Dr. Oyekan Owomoyela at the University of Nebraska - Lincoln. The corpus has five thousand tokens and parallel English translations \citep{oweyoruba}.
+
+% \item \textbf{Universal Declaration of Human Rights} is a tiny corpus of some two thousand eight hundred tokens from the Universal Declaration of Human Rights.
+
+% \item \textbf{L\d{\'e}s{\'i}k{\`a}} is a fifty thousand token corpus of unigrams taken from recent research by Victor Williamson on the Yor{\`u}b{\'a} dictionary. To this list we added de-duped unigrams from all the entire dataset, before splitting into training and validation. This gave us a comprehensive view and the ability to learn the diacritic patterns of all Yor{\`u}b{\'a} words as well as common loan-words.
+
+% \item \textbf{Private texts}: In addition to the public domain texts, the authors also had access to personal archives of written work, correctly tone-marked that would add some meaningful diversity to the corpus. These included transcription of interviews and long form stories. These texts numbered some three hundred thousand tokens.
+
+% TODO We should delete this part since, I don't really know what Timi did. I asked him for something we can use in December, but he hasn't given it, so I'm not sure it makes sense to include this.
+% \item \textbf{{Yor{\`u}b{\'a} Object Character Recognition (OCR)}}: Another direction explored by the authors, was the use of Object Character Recognition (OCR).  This is the process of scanning physical books to derive plain text from the scanned images. However the presence of diacritics in Yor{\`u}b{\'a} books presents problems for English OCR models. So we retrained a new Yor{\`u}b{\'a} OCR model using existing clean text. TIMI elborate here on what was done. Feel free to blow grammer and give technical details.\. We bootstrapped our Háà Ènìyàn efforts, Ogboju Ode as well as Aaro Meta.
+% \end{itemize}
+
+\paragraph{Experimental setup}\label{sec:experimental}
+Data preprocessing, parallel text preparation and training hyper-parameters are the same as in \citep{orife2018adr}. Experiments included evaluations of the effect of the various texts, notably for JW300, which is a disproportionately large contributor to the dataset. We also evaluated models trained with pre-trained FastText embeddings to understand the boost in performance possible with word embeddings \citep{alabi2019massive, bojanowski2017enriching}. Our training hardware configuration was an AWS EC2 p3.2xlarge instance with \texttt{OpenNMT-py} \citep{opennmt}.
+
+ \begin{table}[h]
+  \caption{Data sources, prevalence and category of text}
+  \label{tab:training_datasets}
+  \begin{center}
+  \begin{tabular}{rll}
+    \toprule
+    \textbf{\# words} & \textbf{Source or URL}  & \textbf{Description} \\
+    \midrule
+    24,868 & rma.nwu.ac.za  & Lagos-NWU corpus \\  
+    50,202 & theyorubablog.com & language blog \\ 
+    910,401 & bible.com/versions/911 & Biblica (NIV) \\
+    \midrule
+    11,488,825 & opus.nlpl.eu & JW300 \\
+    831,820 & bible.com/versions/207 & Bible Society Nigeria (KJV)\\
+    177,675 & GitHub & Embeddings dataset (mixed) \\
+    142,991 & GitHub & Language ID corpus \\
+    47,195 &  & Yor{\`u}b{\'a} lexicon \\
+    29,338 & yoruba.unl.edu & Proverbs \\
+    2,887 & unicode.org/udhr & Human rights edict \\
+    \midrule
+    150,360 & Private sources & Conversational interviews \\
+    15,281 & Private sources & Short stories \\
+    20,038 & OCR & H{\'a}{\`a} {\`E}n{\`i}y{\`a}n (Fiction) \\
+    \midrule
+    \midrule
+    28,308 & yo.globalvoices.org & Global Voices news \\
+    \bottomrule
+  \end{tabular} 
+  \end{center}
+\end{table}
+
+\paragraph{A new, modern multi-purpose evaluation dataset}\label{sec:evaldataset} To make ADR productive for users, our research experiments needed to be guided by a test set based around modern, colloquial and not exclusively literary text. After much review, we selected Global Voices, a corpus of journalistic news text %best 
+from a multilingual community of journalists, translators, bloggers, academics and human rights activists \citep{global_voices}.
+
+% In the previous paper, the test set was selected as a subset of the total available dataset, this means that the test and validation sets, drew generally speaking from the same distribution as the training set, this explains the stellar performance reported in Orife, 2018. However, we need our evaluation set to be a (1) public (2) representative of a mixture of modern written and spoken Yoruba styles (3) large enough. 
+
+% From the texts that we had available, including interviews, journalistic news, literary and liturgical texts,  Therefore, by evaluating the quality of the various models on this diacritic restoration task would ensure that published models would best match the language usage expectations of users. For these reasons we converged on using broadcast news (Iroyin) as our evaluation set.
+
+\section{Results}\label{sec:results}
+We evaluated the ADR models by computing a single-reference BLEU score using the Moses \texttt{multi-bleu.perl} scoring script, the predicted perplexity of the model's own predictions and the Word Error Rate (WER). All models with additional data improved over the 3-corpus soft-attention baseline, with JW300 providing a \{33\%, 11\%\}  boost in BLEU and absolute WER respectively. Error analyses revealed that the Transformer was robust to receiving digits, rare or code-switched words as input and degraded ADR performance gracefully. In many cases, this meant the model predicted the undiacritized word form or a related word from the context, but continued to correctly predict subsequent words in the sequence. The FastText embedding provided a small boost in performance for the Transformer, but was mixed across metrics for the soft-attention models. 
+ \begin{table}[h]
+  \caption{BLEU, predicted perplexity \& WER on the Global Voices testset}
+  \label{tab:results-appendix}
+ \begin{center}
+  \begin{tabular}{lccc}
+    \toprule
+    \textbf{Model} & \textbf{BLEU} &\textbf{Perplexity} &\textbf{WER\%}\\
+    \bottomrule
+    \\
+%   Baseline RNN (?) & 90.1 & 1.68 \\
+    Soft-attention model from \citep{orife2018adr} & 26.53 & 1.34 & 58.17 \\
+    \midrule
+	\hspace{5mm} + Language ID corpus & 42.52 & 1.69 & 33.03 \\ 
+	\hspace{10mm} ++ Interview text & 42.23 & 1.59 & 32.58 \\
+	\hspace{5mm} + All new text \it{minus} JW300 & 43.39 & 1.60 & 31.87 \\ 
+	\hspace{5mm} + All new text & \textbf{59.55} & 1.44 & \textbf{20.40}\\ 
+	\hspace{5mm} + All new text with FastText embedding & 58.87 & \textbf{1.39} & 21.33 \\ 
+    \midrule
+	Transformer model \\
+	 \hspace{5mm} + All new text \it{minus} JW300 & 45.68 & 1.95 & 34.40\\
+	 \hspace{5mm} + All new text & 59.05 & \textbf{1.40} &  23.10\\
+	 \hspace{5mm} + All new text + FastText embedding & \textbf{59.80} & 1.43 & \textbf{22.42}\\ 
+    \bottomrule
+  \end{tabular}
+  \end{center}
+\end{table}
+
+  
+\section{Conclusions and Future Work}
+
+Promising next steps include further automation of our human-in-the-middle data-cleaning tools, further research on contextualized word embeddings for Yor{\`u}b{\'a} and serving or deploying the improved ADR models\footnote{\url{https://github.com/Niger-Volta-LTI/yoruba-adr}}\footnote{\url{https://github.com/Niger-Volta-LTI/yoruba-text}} in user-facing applications and devices.  
+
+%\subsubsection*{Acknowledgments}
+%The authors are grateful for all the support received from Yor{\`u}b{\'a} Name, Masakhane and Data Science Nigeria. 
+
+\bibliography{iclr2020_conference}
+\bibliographystyle{iclr2020_conference}
+
+\appendix
+\section{Appendix}\label{sec:appendix}
+
+\begin{table}[h]
+\caption{The best performing Transformer model trained with the FastText embedding was used to generate predictions. The Baseline model is the 3-corpus soft-attention model. ADR errors are in \textbf{\textcolor{red}{red}}, robust predictions of rare, loan words or digits in \textbf{\textcolor{ao}{green}}. }\label{results}
+\begin{center}
+  \begin{tabular}{ll}
+  	\toprule \\
+	   \textbf{Source:}  & mo ro o wipe awon obirin ti o ronu lati se ise ti okunrin maa n se gbodo gberaga .\\
+       \textbf{Reference:} &  mo r{\`o} {\'o} w{\'i}p{\'e} {\`a}w\d{o}n ob{\`i}rin t{\'i} {\'o} ron{\'u} l{\'a}ti \d{s}e i\d{s}\d{{\'e}} t{\'i} \d{o}k{\`u}nrin m{\'a}a {\'n} \d{s}e gb\d{o}d\d{{\`o}} gb{\'e}raga . \\
+	   \textbf{Prediction:} &   mo r{\`o} {\'o} w{\'i}p{\'e} {\`a}w\d{o}n ob{\`i}rin t{\'i} {\'o} ron{\'u} l{\'a}ti \d{s}e i\d{s}\d{{\'e}} t{\'i} \d{o}k{\`u}nrin m{\'a}a {\'n} \d{s}e gb\d{o}d\d{{\`o}} gb{\'e}raga . \\ 
+	   \textbf{Baseline:} &   mo r{\`o} {\'o} w{\'i}p{\'e} {\`a}w\d{o}n ob{\`i}rin t{\'i} {\'o} ron{\'u} l{\'a}ti \d{s}e i\d{s}\d{{\'e}} t{\'i} \d{o}k{\`u}nrin m{\'a}a \textbf{\textcolor{red}{dar{\'i} s\d{{\`o}}r\d{{\`o}} l{\'a}\d{s}e l\d{{\'o}}kan}} . \\ \\
+
+	\midrule \\ 
+		\textbf{Source:}     & bi o tile je pe egbeegberun ti pada sile .  \\
+		\textbf{Reference:}  & b{\'i} {\'o} til\d{{\`e}}  j\d{{\'e}}  p{\'e} \d{e}gb\d{e}\d{e}gb\d{{\`e}}r{\'u}n ti pad{\`a} s{\'i}l{\'e} . \\
+		\textbf{Prediction:} & b{\'i} {\'o} til\d{{\`e}}  j\d{{\'e}}  p{\'e} \d{e}gb\d{e}\d{e}gb\d{{\`e}}r{\'u}n ti pad{\`a} s{\'i}l{\'e} .\\ 
+		\textbf{Baseline:} & b{\'i} {\'o} til\d{{\`e}}  j\d{{\'e}}  p{\'e} \d{e}gb\d{e}\d{e}gb\d{{\`e}}r{\'u}n t{\'i} pad{\`a} \textbf{\textcolor{red}{s{\'i}l\d{{\`e}} s\d{{\`o}}r\d{{\`o}}}}\\ \\
+    
+    \midrule \\ 
+    	\textbf{Source:} &       mo awon ondije si ipo aare naijiria odun \textbf{\textcolor{ao}{2019}} \\
+		\textbf{Reference:}  &   m\d{o} {\`a}w\d{o}n {\`o}{\`n}d{\'i}je s{\'i} ip{\`o} {\`a}{\`a}r\d{e} n{\`a}{\`i}j{\'i}r{\'i}{\`a} \d{o}d{\'u}n \textbf{\textcolor{ao}{2019}} \\
+		\textbf{Prediction:} &   m\d{o} {\`a}w\d{o}n \textbf{\textcolor{red}{ondije}} s{\'i} ip{\`o} {\`a}{\`a}r\d{e}  n{\`a}{\`i}j{\'i}r{\'i}{\`a} \d{o}d{\'u}n \textbf{\textcolor{ao}{2019}} \\ 
+		\textbf{Baseline:} &  mo {\`a}w\d{o}n \textbf{\textcolor{red}{ojoj{\'u}m\d{{\'o}}}} s{\'i} ip{\`o} \textbf{\textcolor{red}{{\`a}{\'a}r\d{{\`e}}}} n{\`a}\textbf{\textcolor{red}{{\'i}}}j{\'i}r{\'i}{\`a} \d{o}d{\'u}n \textbf{\textcolor{red}{kiki}} \\\\	 
+
+	\midrule \\
+   	\textbf{Source:}     & iriri akobuloogu \textbf{\textcolor{ao}{zone9}} ilu ethiopia je apeere . \\
+	\textbf{Reference:}  & {\`i}r{\'i}r{\'i} \textbf{ak\d{o}b{\'u}l\d{{\'o}}\d{{\`o}}g{\`u}} \textbf{\textcolor{ao}{zone9}}  {\`i}l{\'u} ethiopia j\d{{\'e}} {\`a}p\d{e}\d{e}r\d{e} . \\
+	\textbf{Prediction:} & {\`i}r{\'i}r{\'i} \textbf{\textcolor{red}{akobuloogu}} \textbf{\textcolor{ao}{or{\'i}l{\`e}}} {\`i}l{\'u} ethiopia j\d{{\'e}} {\`a}p\d{e}\d{e}r\d{e} . \\ 
+	\textbf{Baseline:} & {\`i}r{\'i}r{\'i} \textbf{\textcolor{red}{{\`a}w\d{o}n}} {\`i}l{\'u} \textbf{\textcolor{red}{esinsin ar{\'a}k{\`u}nrin}} j\d{{\'e}} {\`a}p\d{e}\d{e}r\d{e} .\\ \\
+  	
+    \midrule \\
+	\textbf{Source:}     & alaga akoko ilu-ti-ko-fi-oba-je ti china mao zedong ti yo awon eniyan ninu isoro . \\
+	\textbf{Reference:}  & al{\'a}ga {\`a}k\d{{\'o}}k\d{{\'o}} \textbf{{\`i}l{\'u}-t{\'i}-k{\`o}-fi-\d{o}ba-j\d{e}} ti \textbf{\textcolor{ao}{china mao zedong}} ti y\d{o} {\`a}w\d{o}n {\`e}n{\`i}y{\`a}n n{\'i}n{\'u} {\`i}\d{s}{\`o}ro . \\
+	\textbf{Prediction:} & al{\'a}ga {\`a}k\textbf{\textcolor{red}{{\'o}k{\`o} ilu-ti-ko-fi-oba-je}} ti \textbf{\textcolor{ao}{china mao tse}} ti y\d{o} {\`a}w\d{o}n {\`e}n{\`i}y{\`a}n n{\'i}n{\'u} {\`i}\d{s}{\`o}ro . \\ 
+	\textbf{Baseline:} & \textbf{\textcolor{red}{j{\'e}h{\'o}\d{s}{\'a}f{\'a}t{\`i} {\`a}k{\'o}k{\`o} sam{\'a}r{\'i}{\`a}}} t{\'i} china \textbf{\textcolor{red}{l\d{e}\d{s}\d{e}k\d{e}\d{s}\d{e} ap{\'a} t{\'i} w{\`a} at{\'i}}} {\`e}niy{\`a}n n{\'i}n{\'u} {\`i}\d{s}{\`o}ro . \\ \\
+    \bottomrule
+  \end{tabular}
+\end{center}
+\end{table} 
+
+
+%%%% FAST TEXT EMBEDDING details
+%Connected to pydev debugger (build 191.6605.12)
+%[2020-02-06 21:10:40,089 INFO] From: /Users/iroro/github/yoruba-adr/embeddings/demo.vocab.pt
+%[2020-02-06 21:10:40,089 INFO] 	* source vocab: 43788 words
+%[2020-02-06 21:10:40,089 INFO] 	* target vocab: 50004 words
+%[2020-02-06 21:10:40,089 INFO] Reading encoder embeddings from /Users/iroro/github/yoruba-adr/embeddings/yo_no_diacritics.txt
+%[2020-02-06 21:11:01,410 INFO] 	Found 92280 total vectors in file.
+%[2020-02-06 21:11:01,410 INFO] Reading decoder embeddings from /Users/iroro/github/yoruba-adr/embeddings/yo_full_diacritics.txt
+%[2020-02-06 21:12:02,070 INFO] 	Found 133297 total vectors in file
+%[2020-02-06 21:12:02,071 INFO] After filtering to vectors in vocab:
+%[2020-02-06 21:12:02,083 INFO] 	* enc: 31221 match, 12567 missing, (71.30%)
+%[2020-02-06 21:12:02,098 INFO] 	* dec: 32512 match, 17492 missing, (65.02%)
+%[2020-02-06 21:12:02,098 INFO] 
+%Saving embedding as:
+%	* enc: /Users/iroro/github/yoruba-adr/embeddings/embeddings.enc.pt
+%	* dec: /Users/iroro/github/yoruba-adr/embeddings/embeddings.dec.pt
+%[2020-02-06 21:12:03,216 INFO] 
+%Done.
+\end{document}
